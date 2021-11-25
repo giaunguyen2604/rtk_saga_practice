@@ -1,12 +1,16 @@
-import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import authReducer from 'features/auth/authSlice';
+import { Action, combineReducers, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import { connectRouter, routerMiddleware } from "connected-react-router";
+import { history } from "utils";
+import authReducer from "features/auth/authSlice";
 
-const rootReducer = {
-  auth: authReducer
-}
+const rootReducer = combineReducers({
+  router: connectRouter(history),
+  auth: authReducer,
+});
 
 export const store = configureStore({
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(routerMiddleware(history)),
 });
 
 export type AppDispatch = typeof store.dispatch;
